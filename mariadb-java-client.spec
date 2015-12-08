@@ -23,7 +23,7 @@ Summary:        Javadoc for %{name}
 This package contains the API documentation for %{name}.
 
 %prep
-%setup -q
+%setup -cn %{name}-%{version}
 
 %build
 %mvn_install
@@ -39,5 +39,5 @@ This package contains the API documentation for %{name}.
 
 
 %changelog
-* Mon Dec  7 2015 Tomáš Repík <trepik@redhat.com> - 1.3.2-1
+* Tue Dec  8 2015 Tomáš Repík <trepik@redhat.com> - 1.3.2-1
 - Initial package
