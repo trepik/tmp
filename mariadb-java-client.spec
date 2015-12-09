@@ -1,3 +1,5 @@
+%global _mavenmetadir /usr/share/maven-metadata
+
 Name:           mariadb-java-client
 Version:        1.3.2
 Release:        1%{?dist}
@@ -9,6 +11,8 @@ Source0:        https://downloads.mariadb.com/files/MariaDB/connector-java-%{ver
 
 BuildArch:      noarch
 BuildRequires:  maven-local
+BuildRequires:  jna
+BuildRequires:  jna-contrib
 Requires:       mariadb
 
 %description
@@ -24,9 +28,10 @@ This package contains the API documentation for %{name}.
 
 %prep
 %setup -cn %{name}-%{version}
+#%%pom_remove_dep net.java.dev.jna:jna
 
 %build
-%mvn_install
+%mvn_build -f
 
 
 %install
@@ -34,8 +39,15 @@ This package contains the API documentation for %{name}.
 
 
 %files 
+%dir %{_jnidir}/%{name}
+%{_jnidir}/%{name}/%{name}.jar
+#%%{_mavenpomdir}/%%{name}/%%{name}.pom 
+%{_mavenmetadir}/%{name}.xml
 
+%doc documentation/* README.md
 
+%files javadoc
+%doc %{_javadocdir}/%{name}
 
 
 %changelog
