@@ -28,10 +28,16 @@ Summary:        Javadoc for %{name}
 This package contains the API documentation for %{name}.
 
 %prep
-%setup -cn %{name}-%{version}
+%setup -qcn %{name}-%{version}
 # Cleanup
 find . -name "*.class" -print -delete
 find . -name "*.jar" -print -delete
+
+sed -i 's/\r$//' README.md
+sed -i 's/\r$//' documentation/Use-MariaDB-Connector-j-driver.md
+sed -i 's/\r$//' documentation/About-MariaDB-Connector-J.md
+sed -i 's/\r$//' documentation/Developers-Guide.md
+sed -i 's/\r$//' documentation/Failover-and-high-availability.md
 
 # Fix BR
 # net.java.dev.jna:jna:jar:platform:3.3.0
