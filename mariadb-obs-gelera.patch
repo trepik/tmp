@@ -1,0 +1,66 @@
+--- SPECS/mariadb2.spec	2015-12-09 12:07:03.504961549 +0100
++++ SPECS/mariadb.spec	2015-12-09 11:53:27.200127102 +0100
+@@ -105,6 +105,11 @@
+ %global obsoleted_mysql_evr 5.6-0
+ %global obsoleted_mysql_case_evr 5.5.30-5
+ 
++# The evr of mariadb-galera we want to obsolete
++%global obsoleted_mariadb_galera_evr 10.0.17-5
++%global obsoleted_mariadb_galera_common_evr 5.5.36-10
++%global obsoleted_mariadb_galera_server_evr 10.0.17-5
++
+ # Provide mysql names for compatibility
+ %bcond_without mysql_names
+ %bcond_without conflicts
+@@ -116,7 +121,7 @@
+ 
+ Name:             mariadb
+ Version:          %{compatver}.%{bugfixver}
+-Release:          3%{?with_debug:.debug}%{?dist}
++Release:          4%{?with_debug:.debug}%{?dist}
+ Epoch:            1
+ 
+ Summary:          A community developed branch of MySQL
+@@ -213,6 +218,10 @@
+ %{?obsoleted_mysql_evr:Obsoletes: mysql < %{obsoleted_mysql_evr}}
+ %{?with_conflicts:Conflicts:        community-mysql}
+ 
++# obsolation of mariadb-galera
++Provides: mariadb-galera = %{sameevr}
++Obsoletes: mariadb-galera < %{obsolated_mariadb_galera_evr}
++
+ # Filtering: https://fedoraproject.org/wiki/Packaging:AutoProvidesAndRequiresFiltering
+ %if 0%{?fedora} > 14 || 0%{?rhel} > 6
+ %global __requires_exclude ^perl\\((hostnames|lib::mtr|lib::v1|mtr_|My::)
+@@ -270,6 +279,10 @@
+ Group:            Applications/Databases
+ Requires:         %{_sysconfdir}/my.cnf
+ 
++# obsolation of mariadb-galera-common
++Provides: mariadb-galera-common = %{sameevr}
++Obsoletes: mariadb-galera-common < %{obsolated_mariadb_galera_common_evr}
++
+ %description      common
+ The package provides the essential shared files for any MariaDB program.
+ You will need to install this package to use any other MariaDB package.
+@@ -328,6 +341,10 @@
+ %{?with_conflicts:Conflicts:        mariadb-galera-server}
+ %{?obsoleted_mysql_evr:Obsoletes: mysql-server < %{obsoleted_mysql_evr}}
+ 
++# obsolation of mariadb-galera-server
++Provides: mariadb-galera-server = %{sameevr}
++Obsoletes: mariadb-galera-server < %{obsolated_mariadb_galera_server_evr}
++
+ %description      server
+ MariaDB is a multi-user, multi-threaded SQL database server. It is a
+ client/server implementation consisting of a server daemon (mysqld)
+@@ -1171,6 +1188,9 @@
+ %endif
+ 
+ %changelog
++* Wed Dec 09 2015 Tomas Repik <trepik@redhat.com> - 1:10.1.8-4
++- obsolate mariadb-galera & mariadb-galera-server
++
+ * Mon Dec 07 2015 Dan Horák <dan[at]danny.cz> - 1:10.1.8-3
+ - rebuilt for s390(x)
+ 
