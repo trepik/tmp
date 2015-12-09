@@ -105,6 +105,11 @@
 %global obsoleted_mysql_evr 5.6-0
 %global obsoleted_mysql_case_evr 5.5.30-5
 
+# The evr of mariadb-galera we want to obsolete
+%global obsoleted_mariadb_galera_evr 10.0.17-5
+%global obsoleted_mariadb_galera_common_evr 5.5.36-10
+%global obsoleted_mariadb_galera_server_evr 10.0.17-5
+
 # Provide mysql names for compatibility
 %bcond_without mysql_names
 %bcond_without conflicts
@@ -213,6 +218,10 @@ Provides:         mysql-compat-client%{?_isa} = %{sameevr}
 %{?obsoleted_mysql_evr:Obsoletes: mysql < %{obsoleted_mysql_evr}}
 %{?with_conflicts:Conflicts:        community-mysql}
 
+# obsolation of mariadb-galera
+Provides: mariadb-galera = %{sameevr}
+Obsoletes: mariadb-galera < %{obsolated_mariadb_galera_evr}
+
 # Filtering: https://fedoraproject.org/wiki/Packaging:AutoProvidesAndRequiresFiltering
 %if 0%{?fedora} > 14 || 0%{?rhel} > 6
 %global __requires_exclude ^perl\\((hostnames|lib::mtr|lib::v1|mtr_|My::)
@@ -269,6 +278,10 @@ package itself.
 Summary:          The shared files required by server and client
 Group:            Applications/Databases
 Requires:         %{_sysconfdir}/my.cnf
+
+# obsolation of mariadb-galera-common
+Provides: mariadb-galera-common = %{sameevr}
+Obsoletes: mariadb-galera-common < %{obsolated_mariadb_galera_common_evr}
 
 %description      common
 The package provides the essential shared files for any MariaDB program.
@@ -330,8 +343,6 @@ Provides:         mysql-compat-server%{?_isa} = %{sameevr}
 
 # obsolation of mariadb-galera-server
 Provides: mariadb-galera-server = %{sameevr}
-# The evr of mariadb-galera-server we want to obsolete
-%global obsoleted_mariadb_galera_server_evr 10.0.13-6
 Obsoletes: mariadb-galera-server < %{obsolated_mariadb_galera_server_evr}
 
 %description      server
