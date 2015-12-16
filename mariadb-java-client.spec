@@ -1,8 +1,6 @@
-%global _mavenmetadir /usr/share/maven-metadata
-
 Name:           mariadb-java-client
 Version:        1.3.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Connects applications developed in Java to MariaDB and MySQL databases
 
 License:        LGPLv2+
@@ -29,15 +27,13 @@ This package contains the API documentation for %{name}.
 
 %prep
 %setup -qcn %{name}-%{version}
-# Cleanup
-find . -name "*.class" -print -delete
-find . -name "*.jar" -print -delete
 
-sed -i 's/\r$//' README.md
-sed -i 's/\r$//' documentation/Use-MariaDB-Connector-j-driver.md
-sed -i 's/\r$//' documentation/About-MariaDB-Connector-J.md
-sed -i 's/\r$//' documentation/Developers-Guide.md
-sed -i 's/\r$//' documentation/Failover-and-high-availability.md
+# convert files from dos to unix line encoding
+for file in README.md documentation/*.md; do
+ sed -i.orig 's|\r||g' $file
+ touch -r $file.orig $file
+ rm $file.orig
+done
 
 # Fix BR
 # net.java.dev.jna:jna:jar:platform:3.3.0
@@ -48,17 +44,24 @@ sed -i 's/\r$//' documentation/Failover-and-high-availability.md
 %mvn_alias org.mariadb.jdbc:%{name} mariadb:mariadb-connector-java
 
 %build
+# tests are skipped, while they require running application server
 %mvn_build -f
 
 %install
 %mvn_install
 
-
 %files -f .mfiles
 %doc documentation/* README.md
+%license LICENSE
 
 %files javadoc -f .mfiles-javadoc
+%license LICENSE
 
 %changelog
+* Wed Dec 16 2015 Tomáš Repík <trepik@redhat.com> - 1.3.3-2
+- installing LICENSE added
+- conversion from dos to unix line encoding revised
+- unnecessary tasks removed
+
 * Wed Dec  9 2015 Tomáš Repík <trepik@redhat.com> - 1.3.3-1
 - Initial package
