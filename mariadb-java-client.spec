@@ -12,6 +12,7 @@ BuildArch:      noarch
 BuildRequires:  maven-local
 BuildRequires:  mvn(net.java.dev.jna:jna)
 BuildRequires:  mvn(net.java.dev.jna:jna-platform)
+BuildRequires:  mvn(com.google.code.maven-replacer-plugin:replacer)
 Requires:       mariadb
 
 %description
@@ -42,6 +43,8 @@ done
 
 %mvn_file org.mariadb.jdbc:%{name} %{name}
 %mvn_alias org.mariadb.jdbc:%{name} mariadb:mariadb-connector-java
+
+%pom_remove_plugin org.apache.maven.plugins:maven-checkstyle-plugin
 
 %build
 # tests are skipped, while they require running application server
